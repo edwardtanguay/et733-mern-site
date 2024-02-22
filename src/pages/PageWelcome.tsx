@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { IEmployee } from "../interfaces";
 import axios from "axios";
-
-const backendUrl = "http://localhost:4206";
+import * as config from '../config';
 
 export const PageWelcome = () => {
 	const [employees, setEmployees] = useState<IEmployee[]>([]);
 
 	useEffect(() => {
 		(async () => {
-			const response = await axios.get(`${backendUrl}/employees`);
+			const response = await axios.get(`${config.backendUrl()}/employees`);
 			const _employees = response.data;
 			setEmployees(_employees);
 		})();
@@ -17,7 +16,14 @@ export const PageWelcome = () => {
 
 	return (
 		<>
-			<h2>There are {employees.length} employees:</h2>
+			<h2 className="mb-2 text-xl">There are {employees.length} employees:</h2>
+			<ul className="list-disc ml-6">
+				{employees.map((employee) => {
+					return (
+						<li key={employee.employeeID}><span className="font-semibold">{employee.firstName} {employee.lastName}</span> - {employee.title}</li>
+					);
+				})}
+			</ul>
 		</>
 	);
 };
